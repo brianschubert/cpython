@@ -1501,6 +1501,18 @@ attrgetter_reduce(attrgetterobject *ag, PyObject *Py_UNUSED(ignored))
     return Py_BuildValue("ON", Py_TYPE(ag), attrstrings);
 }
 
+static PyObject *
+attrgetter_get_attrs(attrgetterobject *ag, void *closure) {
+    return attrgetter_args(ag);
+}
+
+static PyGetSetDef attrgetter_getsets [] = {
+    {"_attrs", (getter)attrgetter_get_attrs, NULL,
+     NULL,
+     NULL},
+    {NULL}  /* Sentinel */
+};
+
 static PyMethodDef attrgetter_methods[] = {
     {"__reduce__", (PyCFunction)attrgetter_reduce, METH_NOARGS,
      reduce_doc},
@@ -1528,6 +1540,7 @@ static PyType_Slot attrgetter_type_slots[] = {
     {Py_tp_clear, attrgetter_clear},
     {Py_tp_methods, attrgetter_methods},
     {Py_tp_members, attrgetter_members},
+    {Py_tp_getset, attrgetter_getsets},
     {Py_tp_new, attrgetter_new},
     {Py_tp_getattro, PyObject_GenericGetAttr},
     {Py_tp_repr, attrgetter_repr},
