@@ -1146,6 +1146,21 @@ itemgetter_reduce(itemgetterobject *ig, PyObject *Py_UNUSED(ignored))
 
 PyDoc_STRVAR(reduce_doc, "Return state information for pickling");
 
+static PyObject *
+itemgetter_get_items(itemgetterobject *ig, void *closure) {
+    if (ig->nitems == 1)
+        return PyTuple_Pack(1, ig->item);
+
+    return Py_NewRef(ig->item);
+}
+
+static PyGetSetDef itemgetter_getsets [] = {
+    {"_items", (getter)itemgetter_get_items, NULL,
+     NULL,
+     NULL},
+    {NULL}  /* Sentinel */
+};
+
 static PyMethodDef itemgetter_methods[] = {
     {"__reduce__", (PyCFunction)itemgetter_reduce, METH_NOARGS,
      reduce_doc},
@@ -1171,6 +1186,7 @@ static PyType_Slot itemgetter_type_slots[] = {
     {Py_tp_clear, itemgetter_clear},
     {Py_tp_methods, itemgetter_methods},
     {Py_tp_members, itemgetter_members},
+    {Py_tp_getset, itemgetter_getsets},
     {Py_tp_new, itemgetter_new},
     {Py_tp_getattro, PyObject_GenericGetAttr},
     {Py_tp_repr, itemgetter_repr},
