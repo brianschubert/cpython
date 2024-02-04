@@ -1866,6 +1866,34 @@ methodcaller_reduce(methodcallerobject *mc, PyObject *Py_UNUSED(ignored))
     }
 }
 
+static PyObject  *
+methodcaller_get_name(methodcallerobject *mc, void *closure) {
+    return Py_NewRef(mc->name);
+}
+
+static PyObject  *
+methodcaller_get_args(methodcallerobject *mc, void *closure) {
+    return PyTuple_GetSlice(mc->xargs, 1, PyTuple_GET_SIZE(mc->xargs));
+}
+
+static PyObject  *
+methodcaller_get_kwargs(methodcallerobject *mc, void *closure) {
+    return PyDict_Copy(mc->kwds);
+}
+
+static PyGetSetDef methodcaller_getsets [] = {
+    {"_name", (getter)methodcaller_get_name, NULL,
+     NULL,
+     NULL},
+    {"_args", (getter)methodcaller_get_args, NULL,
+     NULL,
+     NULL},
+    {"_kwargs", (getter)methodcaller_get_kwargs, NULL,
+     NULL,
+     NULL},
+    {NULL}  /* Sentinel */
+};
+
 static PyMethodDef methodcaller_methods[] = {
     {"__reduce__", (PyCFunction)methodcaller_reduce, METH_NOARGS,
      reduce_doc},
@@ -1892,6 +1920,7 @@ static PyType_Slot methodcaller_type_slots[] = {
     {Py_tp_clear, methodcaller_clear},
     {Py_tp_methods, methodcaller_methods},
     {Py_tp_members, methodcaller_members},
+    {Py_tp_getset, methodcaller_getsets},
     {Py_tp_new, methodcaller_new},
     {Py_tp_getattro, PyObject_GenericGetAttr},
     {Py_tp_repr, methodcaller_repr},
