@@ -246,6 +246,9 @@ Number-theoretic and representation functions
 
    .. versionadded:: 3.9
 
+   .. versionchanged:: 3.12
+      Added the *steps* argument.
+
 .. function:: perm(n, k=None)
 
    Return the number of ways to choose *k* items from *n* items
@@ -666,10 +669,10 @@ Constants
       >>> math.isnan(float('nan'))
       True
 
+   .. versionadded:: 3.5
+
    .. versionchanged:: 3.11
       It is now always available.
-
-   .. versionadded:: 3.5
 
 
 .. impl-detail::
