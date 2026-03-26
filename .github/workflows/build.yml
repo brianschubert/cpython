@@ -685,26 +685,4 @@ jobs:
             || ''
           }}
           ${{ !fromJSON(needs.build-context.outputs.run-windows-tests) && 'build-windows,' || '' }}
-          ${{
-            !fromJSON(needs.build-context.outputs.run-ci-fuzz)
-            && !fromJSON(needs.build-context.outputs.run-ci-fuzz-stdlib)
-            && 'cifuzz,' ||
-            ''
-          }}
-          ${{ !fromJSON(needs.build-context.outputs.run-macos) && 'build-macos,' || '' }}
-          ${{
-            !fromJSON(needs.build-context.outputs.run-ubuntu)
-            && '
-            build-ubuntu,
-            build-ubuntu-ssltests,
-            test-hypothesis,
-            build-asan,
-            build-san,
-            cross-build-linux,
-            '
-            || ''
-          }}
-          ${{ !fromJSON(needs.build-context.outputs.run-android) && 'build-android,' || '' }}
-          ${{ !fromJSON(needs.build-context.outputs.run-ios) && 'build-ios,' || '' }}
-          ${{ !fromJSON(needs.build-context.outputs.run-wasi) && 'build-wasi,' || '' }}
         jobs: ${{ toJSON(needs) }}
